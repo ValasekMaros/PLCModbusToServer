@@ -92,7 +92,7 @@ except AttributeError:
 # ===============================================
 # RTU Slave setup
 slave_addr = 1            # address on bus of the client/slave
-rtu_pins = (25, 26)         # (TX, RX)
+rtu_pins = (15, 2)         # (TX, RX)
 baudrate = 9600
 uart_id = 1
 
@@ -104,7 +104,7 @@ host = ModbusRTUMaster(
      data_bits=8,          # optional, default 8
      stop_bits=1,          # optional, default 1
      parity=None,          # optional, default None
-     ctrl_pin=27,          # optional, control DE/RE
+     ctrl_pin=24,          # optional, control DE/RE
     uart_id=uart_id         # optional, default 1, see port specific docs
 )
 
