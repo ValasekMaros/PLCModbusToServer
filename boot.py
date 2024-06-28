@@ -104,7 +104,7 @@ host = ModbusRTUMaster(
      data_bits=8,          # optional, default 8
      stop_bits=1,          # optional, default 1
      parity=None,          # optional, default None
-     ctrl_pin=24,          # optional, control DE/RE
+     ctrl_pin=4,          # optional, control DE/RE
     uart_id=uart_id         # optional, default 1, see port specific docs
 )
 
