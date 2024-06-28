@@ -11,8 +11,14 @@ import json
 
 machine.freq(80000000)
 
+try:
+    rtc = machine.RTC()
+    rtc.datetime([2000,1,1,5,0,0,0,0])
+except:
+    pass
+
 runStart = time.time()
-calc_interval = 15
+calc_interval = 30
 runCycle = 60
 topic_pub = 'Pool'
 mqtt_client = "PoolDevice00"
