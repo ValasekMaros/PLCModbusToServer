@@ -18,7 +18,7 @@ except:
     pass
 
 runStart = time.time()
-calc_interval = 30
+calc_interval = 60
 runCycle = 60
 topic_pub = 'Pool'
 mqtt_client = "PoolDevice00"
@@ -41,7 +41,6 @@ def wifiConnect():
             cycleTime = endTime - runStart
             print('Cycle time:', cycleTime)
             print('Error sleep')
-            machine.deepsleep((runCycle - cycleTime) * 1000)
             machine.reset()
     print('Connection successful')
     print(sta_if.ifconfig())
@@ -53,22 +52,26 @@ def OTA():
     pass
 
 def hrefDownload():
-    print('Requesting and updating data on RTU client at address {} with {} baud'.format(slave_addr, baudrate))
-    print()
-    hreg_address = register_definitions['HREGS']['DATA']['register']
-    register_qty = register_definitions['HREGS']['DATA']['len']
-    register_value = host.read_holding_registers(
-        slave_addr=slave_addr,
-        starting_addr=hreg_address,
-        register_qty=register_qty,
-        signed=False)
-    print('Status of HREG {}: {}'.format(hreg_address, register_value))
-    vzduch = register_value[0] / 100
-    voda = register_value[1] / 100
-    message['vzduch'] = vzduch
-    message['voda'] = voda
-    print('Vzduch:', vzduch)
-    print('Voda:', voda)
+    try:
+        print('Requesting and updating data on RTU client at address {} with {} baud'.format(slave_addr, baudrate))
+        print()
+        hreg_address = register_definitions['HREGS']['DATA']['register']
+        register_qty = register_definitions['HREGS']['DATA']['len']
+        register_value = host.read_holding_registers(
+            slave_addr=slave_addr,
+            starting_addr=hreg_address,
+            register_qty=register_qty,
+            signed=False)
+        print('Status of HREG {}: {}'.format(hreg_address, register_value))
+        vzduch = register_value[0] / 100
+        voda = register_value[1] / 100
+        message['vzduch'] = vzduch
+        message['voda'] = voda
+        print('Vzduch:', vzduch)
+        print('Voda:', voda)
+    except:
+        message['vzduch'] = None
+        message['voda'] = None
     
 def MQTTSend():
     try:
@@ -132,13 +135,10 @@ message = {
     }
 
 # ----------MAIN PROGRAM----------
-try:
-    wifiConnect()
-    OTA()
-    hrefDownload()
-    MQTTSend()
-except:
-    machine.reset()
+wifiConnect()
+OTA()
+hrefDownload()
+MQTTSend()
 runEnd = time.time()
 runDuration = runEnd - runStart
 print(runStart)
