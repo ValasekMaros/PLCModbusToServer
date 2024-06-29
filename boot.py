@@ -136,7 +136,7 @@ while True:
         print(runDuration)
         if (runDuration < runCycle):
             print('Cycle time:', runDuration)
-            sleep = runCycle - runDuration
+            sleep = runCycle - runEnd
             print('Sleep time:', sleep)
             machine.deepsleep(sleep * 1000)
         else:
