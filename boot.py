@@ -132,10 +132,13 @@ message = {
     }
 
 # ----------MAIN PROGRAM----------
-wifiConnect()
-OTA()
-hrefDownload()
-MQTTSend()
+try:
+    wifiConnect()
+    OTA()
+    hrefDownload()
+    MQTTSend()
+except:
+    machine.reset()
 runEnd = time.time()
 runDuration = runEnd - runStart
 print(runStart)
