@@ -122,22 +122,26 @@ message = {
     }
 
 # ----------MAIN PROGRAM----------
-wifiConnect()
-OTA()
-hrefDownload()
-MQTTSend()
-powerModbus.off()
-runEnd = time.time()
-runDuration = runEnd - runStart
-print(runStart)
-print(runEnd)
-print(runDuration)
-if (runDuration < runCycle):
-    print('Cycle time:', runDuration)
-    sleep = runCycle - runDuration
-    print('Sleep time:', sleep)
-    machine.deepsleep(sleep * 1000)
-else:
-    machine.reset()
+while True:
+    try:
+        wifiConnect()
+        OTA()
+        hrefDownload()
+        MQTTSend()
+        powerModbus.off()
+        runEnd = time.time()
+        runDuration = runEnd - runStart
+        print(runStart)
+        print(runEnd)
+        print(runDuration)
+        if (runDuration < runCycle):
+            print('Cycle time:', runDuration)
+            sleep = runCycle - runDuration
+            print('Sleep time:', sleep)
+            machine.deepsleep(sleep * 1000)
+        else:
+            machine.reset()
+    except:
+        machine.reset()
 # ----------MAIN PROGRAM----------
 machine.reset()
