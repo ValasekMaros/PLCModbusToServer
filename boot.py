@@ -140,6 +140,4 @@ if (runDuration < runCycle):
 else:
     machine.reset()
 # ----------MAIN PROGRAM----------
-
-if IS_DOCKER_MICROPYTHON:
-    sys.exit(0)
+machine.reset()
