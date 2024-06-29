@@ -71,11 +71,14 @@ def hrefDownload():
     print('Voda:', voda)
     
 def MQTTSend():
-    mqtt = MQTTClient(mqtt_client, auth.mqtt_host, auth.mqtt_port, auth.mqtt_user, auth.mqtt_pass)
-    mqtt.connect()
-    time.sleep(1)
-    print(message)
-    mqtt.publish(topic_pub, json.dumps(message), False, 1)
+    try:
+        mqtt = MQTTClient(mqtt_client, auth.mqtt_host, auth.mqtt_port, auth.mqtt_user, auth.mqtt_pass)
+        mqtt.connect()
+        time.sleep(1)
+        print(message)
+        mqtt.publish(topic_pub, json.dumps(message), False, 1)
+    except:
+        machine.reset()
 
 IS_DOCKER_MICROPYTHON = False
 try:
