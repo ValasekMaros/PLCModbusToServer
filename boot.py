@@ -22,6 +22,8 @@ calc_interval = 60
 runCycle = 60
 topic_pub = 'Pool'
 mqtt_client = "PoolDevice00"
+powerModbus = machine.Pin(16, machine.Pin.OUT)
+powerModbus.on()
 
 def wifiConnect():
     sta_if = network.WLAN(network.STA_IF)
@@ -46,10 +48,12 @@ def wifiConnect():
     print(sta_if.ifconfig())
     
 def OTA():
-    firmware_url = "https://raw.githubusercontent.com/ValasekMaros/PLCModbusToServer/main/"
-    ota_updater = OTAUpdater(firmware_url, "boot.py")
-    ota_updater.download_and_install_update_if_available()
-    pass
+    try:
+        firmware_url = "https://raw.githubusercontent.com/ValasekMaros/PLCModbusToServer/main/"
+        ota_updater = OTAUpdater(firmware_url, "boot.py")
+        ota_updater.download_and_install_update_if_available()
+    except:
+        pass
 
 def hrefDownload():
     try:
@@ -72,33 +76,20 @@ def hrefDownload():
     except:
         message['vzduch'] = None
         message['voda'] = None
-    
 def MQTTSend():
     try:
         mqtt = MQTTClient(mqtt_client, auth.mqtt_host, auth.mqtt_port, auth.mqtt_user, auth.mqtt_pass)
         mqtt.connect()
-        time.sleep(1)
-        print(message)
-        mqtt.publish(topic_pub, json.dumps(message), False, 1)
     except:
         machine.reset()
-
-IS_DOCKER_MICROPYTHON = False
-try:
-    import machine
-    machine.reset_cause()
-except ImportError:
-    raise Exception('Unable to import machine, are all fakes available?')
-except AttributeError:
-    # machine fake class has no "reset_cause" function
-    IS_DOCKER_MICROPYTHON = True
-    import sys
-
-
+    else:
+        print(message)
+        mqtt.publish(topic_pub, json.dumps(message), False, 1)
+        
 # ===============================================
 # RTU Slave setup
 slave_addr = 1            # address on bus of the client/slave
-rtu_pins = (15, 2)         # (TX, RX)
+rtu_pins = (17, 5)         # (TX, RX)
 baudrate = 9600
 uart_id = 1
 
@@ -110,13 +101,9 @@ host = ModbusRTUMaster(
      data_bits=8,          # optional, default 8
      stop_bits=1,          # optional, default 1
      parity=None,          # optional, default None
-     ctrl_pin=4,          # optional, control DE/RE
+     ctrl_pin=18,          # optional, control DE/RE
     uart_id=uart_id         # optional, default 1, see port specific docs
 )
-
-if IS_DOCKER_MICROPYTHON:
-    # works only with fake machine UART
-    assert host._uart._is_server is False
 
 # commond slave register setup, to be used with the Master example above
 register_definitions = {
@@ -139,6 +126,7 @@ wifiConnect()
 OTA()
 hrefDownload()
 MQTTSend()
+powerModbus.off()
 runEnd = time.time()
 runDuration = runEnd - runStart
 print(runStart)
