@@ -19,7 +19,7 @@ except:
 
 runStart = time.time()
 calc_interval = 60
-runCycle = 60
+runCycle = 30
 topic_pub = 'Pool'
 mqtt_client = "PoolDevice00"
 powerModbus = machine.Pin(16, machine.Pin.OUT)
