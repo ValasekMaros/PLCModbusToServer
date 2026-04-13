@@ -18,7 +18,7 @@ except:
     pass
 
 runStart = time.time()
-calc_interval = 60
+calc_interval = 30
 runCycle = 30
 topic_pub = 'Pool'
 mqtt_client = "PoolDevice00"
