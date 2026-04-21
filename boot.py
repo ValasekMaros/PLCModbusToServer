@@ -144,4 +144,5 @@ while True:
     except:
         machine.reset()
 # ----------MAIN PROGRAM----------
-machine.reset()
+while True:
+    machine.reset()
