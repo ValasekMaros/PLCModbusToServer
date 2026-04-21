@@ -9,7 +9,7 @@ from umodbus.serial import Serial as ModbusRTUMaster
 from umodbus.functions import int_to_bin
 import json
 
-machine.freq(80000000)
+machine.freq(240000000)
 
 try:
     rtc = machine.RTC()
